@@ -1,0 +1,198 @@
+html,
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background-color: lightgray;
+  overflow-y: hidden;
+}
+
+.App {
+  color: blue;
+}
+
+.formContainer {
+  margin-top: 1%;
+  display: flex;
+  justify-content: center;
+  height: 12vh;
+}
+
+.pForm {
+  width: 50%;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+}
+
+
+/* New CSS */
+
+.head {
+  display: flex;
+}
+
+.headText {
+  margin-top: 10px;
+  width: 95%;
+}
+
+.headButton {
+  margin-top: 10px;
+  width: 5%;
+  text-align: center;
+}
+
+.lit {
+  background-color: lightgray;
+  color: black;
+}
+
+.dark {
+  background-color: black;
+  color: white;
+}
+
+.button {
+  margin: 0.5%;
+  height: 48px;
+  width: 48px;
+  border-radius: 10px;
+  box-shadow: 1px 1px 2px 1px mediumturquoise;
+  cursor: pointer;
+}
+
+.pagehead {
+  margin: 0px;
+  text-align: center;
+  color: blue;
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  height: 78vh;
+  overflow-y: auto;
+}
+
+.post {
+  margin-left: 20%;
+  margin-bottom: 2%;
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  justify-content: center;
+  padding: 25px;
+  width: 60%;
+  background-color: white;
+  border: 1px solid darkgrey;
+  box-sizing: border-box;
+  border-radius: 15px;
+}
+
+.post>p {
+  margin: 0px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  font-size: 1.3em;
+}
+
+.post .postFooter {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around
+}
+
+.postDark {
+  background-color: darkgray;
+  border: 1px solid white;
+}
+
+.post-pic {
+  width: 100%;
+  height: auto;
+}
+
+hr {
+  border: 1px solid black;
+  background: darkblue;
+}
+
+.pForm>button {
+  width: 20%;
+  padding-right: 10px;
+  font-size: 1.3em;
+  border-radius: 10px;
+}
+
+.postBtnLit {
+  background-color: darkgray;
+  color: white;
+}
+
+.postBtnDark {
+  background-color: white;
+  color: black;
+}
+
+#search {
+  width: 40%;
+  height: 40px;
+  font-size: 1.3em;
+  padding-left: 10px;
+  margin-right: 5px;
+  margin-bottom: 5px;
+  border-radius: 10px;
+}
+
+.loading {
+  color: red;
+  font-size: 1.8em;
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+}
+
+.loader {
+  display: flex;
+  align-items: center;
+}
+
+.spinner {
+  animation: spin infinite 2s linear;
+
+  /*You can increase or decrease the timer (5s) to 
+   increase or decrease the speed of the spinner*/
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media screen and (max-width:700px) {
+
+  .headText {
+    width: 80%;
+  }
+  
+  .headButton {
+    width: 20%;
+  }
+
+  .pForm>button {
+    width: auto;
+  }
+
+  .post {
+    margin-left: 5%;
+    width: 90%;
+  }
+
+  .post>p {
+    font-size: 0.9em;
+  }
+}
