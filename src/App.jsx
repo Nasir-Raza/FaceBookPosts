@@ -1,15 +1,15 @@
-import { useState, useEffect } from 'react';
-// import { ImSpinner9 } from "react-icons/im";
-import { ImSpinner9 } from 'react-icons/im';
+import { useState, useEffect } from "react";
+import { ImSpinner9 } from "react-icons/im";
 
 import moment from "moment/moment";
 
 // import axios from "axios";
 
 import { initializeApp } from "firebase/app";
+
 // import {
 //   getFirestore, collection, addDoc, serverTimestamp,
-//   getDocs, onSnapshot, query, orderBy
+//   getDocs, query, orderBy
 // }
 //   from "firebase/firestore";
 
@@ -20,7 +20,8 @@ import {
   from "firebase/firestore";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faThumbsUp, faComment, faShare, faSun, faMoon } from "@fortawesome/free-solid-svg-icons";
+import { faThumbsUp, faComment, faShare, faSun, faMoon } 
+from "@fortawesome/free-solid-svg-icons";
 
 
 import './App.css';
@@ -46,10 +47,10 @@ const Posts = ({ isLit, postTitle, postText, postedOn }) => (
       {
         moment(
           (postedOn)
-          ? postedOn * 1000
-          : undefined
+            ? postedOn * 1000
+            : undefined
         )
-        .format('Do MMMM, h:mm a')
+          .format('Do MMMM, h:mm a')
       }
     </span>
     <h1 className={(isLit) ? 'lit' : 'dark'}>
@@ -92,20 +93,23 @@ function App() {
     () => {
 
       // const getPosts = async () => {
-      //   const querySnapshot = await getDocs(collection(db, "posts"));
+      //   setIsLoading(true);
+      //   const fetchQuery = query(collection(db, "posts"),
+      //     orderBy("postedOn", "desc"));
+
+      //   const querySnapshot = await getDocs(fetchQuery);
+      //   const posts = [];
+
       //   querySnapshot.forEach((doc) => {
       //     // doc.data() is never undefined for query doc snapshots
       //     console.log(doc.id, " => ", doc.data());
 
-      //     setPosts((prev) => {
-      //       let newPosts = [...prev, doc.data()];
-      //       return newPosts;
-      //       // console.log("newposts: ", newPosts);            
-      //     }
-      //     );
+      //     posts.push({ id: doc.id, ...doc.data() });
+
+      //     setIsLoading(false);
 
       //   });
-
+      //   setPosts(posts);
 
       // }
 
@@ -113,7 +117,7 @@ function App() {
 
       let unsubscribe = null;
       setIsLoading(true);
-      const getRealtimeData = async () => {
+      const getRealtimeData = () => {
 
         const fetchQuery = query(collection(db, "posts"),
           orderBy("postedOn", "desc"));
@@ -139,7 +143,7 @@ function App() {
 
     }, []);
 
-  // console.log("posts: ", posts);
+  console.log("posts: ", posts);
 
   const savetPosts = async (e) => {
     e.preventDefault();
@@ -230,7 +234,7 @@ function App() {
           }
         </div>
 
-       {
+        {
           posts.map((eachPost, i) => (
             <div key={i}>
               {/* {console.log(eachPost.postText)} */}
@@ -250,4 +254,3 @@ function App() {
 }
 
 export default App;
- 
