@@ -9,19 +9,19 @@ import { initializeApp } from "firebase/app";
 
 // import {
 //   getFirestore, collection, addDoc, serverTimestamp,
-//   getDocs, query, orderBy
+//   getDocs, query, orderBy, doc, deleteDoc, updateDoc
 // }
 //   from "firebase/firestore";
 
 import {
   getFirestore, collection, addDoc, serverTimestamp,
-  onSnapshot, query, orderBy
+  onSnapshot, query, orderBy, doc, deleteDoc, updateDoc
 }
   from "firebase/firestore";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faThumbsUp, faComment, faShare, faSun, faMoon } 
-from "@fortawesome/free-solid-svg-icons";
+import { faThumbsUp, faComment, faShare, faSun, faMoon }
+  from "@fortawesome/free-solid-svg-icons";
 
 
 import './App.css';
@@ -41,53 +41,100 @@ const app = initializeApp(firebaseConfig);
 // Initialize Cloud Firestore and get a reference to the service
 const db = getFirestore(app);
 
-const Posts = ({ isLit, postTitle, postText, postedOn }) => (
-  <div className={(isLit) ? 'post' : 'post postDark'}>
-    <span className={(isLit) ? 'lit' : 'dark'}>
-      {
-        moment(
-          (postedOn)
-            ? postedOn * 1000
-            : undefined
-        )
-          .format('Do MMMM, h:mm a')
-      }
-    </span>
-    <h1 className={(isLit) ? 'lit' : 'dark'}>
-      {postTitle}
-    </h1>
+const Posts = ({ isLit, setIsEdit, setUpdateId, setTitle,
+  setPostText, postId, postTitle, postText, postedOn }) => {
 
-    {/* {console.log("postText: ", postText)} */}
+  const deletePost = async () => {
+    console.log("postId: ", postId);
+    await deleteDoc(doc(db, "posts", postId));
+  }
 
-    <p className={(isLit) ? 'lit' : 'dark'}>
-      {postText}
-    </p><hr />
-    {/* <img className="post-pic" src={imageurl} alt="news" /> */}
+  const editPost = () => {
+    setIsEdit(true);
+    setUpdateId(postId);
+    document.getElementById("postTitle").value = postTitle;
+    document.getElementById("postText").value = postText;
 
-    <div>
-      <hr />
+    setTitle(document.getElementById("postTitle").value);
+    setPostText(document.getElementById("postText").value);
+  }
+
+  return (
+    <div className={(isLit) ? 'post' : 'post postDark'}>
+      <span className={(isLit) ? 'lit' : 'dark'}>
+        {
+          moment(
+            (postedOn)
+              ? postedOn * 1000
+              : undefined
+          )
+            .format('Do MMMM, h:mm a')
+        }
+      </span>
+      <h1 className={(isLit) ? 'lit' : 'dark'}>
+        {postTitle}
+      </h1>
+
+      <p className={(isLit) ? 'lit' : 'dark'}>
+        {postText}
+      </p>
+
+      {/* <img className="post-pic" src={imageurl} alt="news" /> */}
+
+      <div className="buttons">
+        <button className={
+          (isLit)
+            ? ''
+            : 'postBtnDark'
+        }
+          onClick={() => {
+            editPost();
+          }
+          }>Edit
+        </button>
+        <button className={
+          (isLit)
+            ? ''
+            : 'postBtnDark'
+        }
+          onClick={() => {
+            deletePost();
+          }
+          }>Delete
+        </button>
+      </div>
+
+      <div>
+        <hr />
+      </div>
+      <div className={
+        (isLit)
+        ? 'postFooter lit'
+        : 'postFooter dark'
+      }>
+        <div><FontAwesomeIcon icon={faThumbsUp} /> Like</div>
+        <div><FontAwesomeIcon icon={faComment} /> Comment</div>
+        <div><FontAwesomeIcon icon={faShare} /> Share</div>
+      </div>
+
+      <div>
+        <hr />
+      </div>
     </div>
-    <div className={(isLit) ? 'postFooter lit' : 'postFooter dark'}>
-      <div><FontAwesomeIcon icon={faThumbsUp} /> Like</div>
-      <div><FontAwesomeIcon icon={faComment} /> Comment</div>
-      <div><FontAwesomeIcon icon={faShare} /> Share</div>
-    </div>
 
-    <div>
-      <hr />
-    </div>
-  </div>
+  );
+}
 
-);
 
 function App() {
 
   const [title, setTitle] = useState("");
   const [postText, setPostText] = useState("");
+  const [isEdit, setIsEdit] = useState(false);
   const [isLit, setIsLit] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [posts, setPosts] = useState([]);
-
+  const [updateId, setUpdateId] = useState(null);
 
   useEffect(
     () => {
@@ -104,7 +151,7 @@ function App() {
       //     // doc.data() is never undefined for query doc snapshots
       //     console.log(doc.id, " => ", doc.data());
 
-      //     posts.push({ id: doc.id, ...doc.data() });
+      //     posts.push({ postId: doc.id, ...doc.data() });
 
       //     setIsLoading(false);
 
@@ -124,16 +171,15 @@ function App() {
         unsubscribe = onSnapshot(fetchQuery, (querySnapshot) => {
           const posts = [];
           querySnapshot.forEach((doc) => {
-            posts.push({ id: doc.id, ...doc.data() });
-            console.log("local posts: ", posts);
+            posts.push({ postId: doc.id, ...doc.data() })
           });
-          setPosts(posts);
           console.log("posts: ", posts);
+          setPosts(posts);
           setIsLoading(false);
         });
 
       }
-
+      
       getRealtimeData();
 
       return () => {
@@ -142,8 +188,6 @@ function App() {
       }
 
     }, []);
-
-  console.log("posts: ", posts);
 
   const savetPosts = async (e) => {
     e.preventDefault();
@@ -157,13 +201,29 @@ function App() {
     } catch (e) {
       console.error("Error adding document: ", e);
     }
+    document.getElementById("postTitle").value = "";
+    document.getElementById("postText").value = "";
+  }
+
+  const updatePost = async (e) => {
+    e.preventDefault();
+    setIsEdit(false);
+    document.getElementById("postTitle").value = "";
+    document.getElementById("postText").value = "";
+
+    console.log("updateId: ", updateId);
+    
+    const postRef = doc(db, "posts", updateId);
+    await updateDoc(postRef, {
+      postTitle: title,
+      postText: postText
+    });
   }
 
   return (
     <div className={
       (isLit) ? 'App lit' : 'App dark'
     }>
-
       <div className={(isLit) ? 'head lit' : 'head dark'}>
         <div className="headText" >
           <h1 className=
@@ -179,8 +239,10 @@ function App() {
             onClick={() => { setIsLit(!isLit) }}>
             {
               (isLit)
-                ? <FontAwesomeIcon icon={faSun} size='2x' title='Light mode' />
-                : <FontAwesomeIcon icon={faMoon} size='2x' title='Dark mode' />
+                ? <FontAwesomeIcon icon={faSun} size='2x' 
+                  title='Light mode' />
+                : <FontAwesomeIcon icon={faMoon} size='2x' 
+                  title='Dark mode' />
             }
           </button>
         </div>
@@ -195,7 +257,7 @@ function App() {
         }
           onSubmit={savetPosts}>
 
-          <input type="text" name="title" id="title"
+          <input type="text" name="postTitle" id="postTitle"
             onChange={
               (e) => {
                 setTitle(e.target.value);
@@ -203,22 +265,35 @@ function App() {
             }
             placeholder="Post title..." />
 
-          <textarea name="post" id="post"
+          <textarea name="postText" id="postText"
             onChange={
               (e) => {
                 setPostText(e.target.value);
               }
             }
             placeholder="What's in your mind..." />
-
-          <button
-            className={
-              (isLit)
-                ? 'postBtnLit'
-                : 'postBtnDark'
+          <div className="formButton">
+            <button
+              className={
+                (isLit)
+                  ? ''
+                  : 'postBtnDark'
+              }
+              type="submit">Post</button>
+            {(isEdit) ?
+              <button
+                className={
+                  (isLit)
+                    ? ''
+                    : 'postBtnDark'
+                }
+                onClick={updatePost}
+              >Update</button>
+              : ""
             }
-            type="submit">Post</button>
+          </div>
         </form>
+
       </div>
 
       <div className={(isLit) ? 'main lit' : 'main dark'}>
@@ -237,9 +312,13 @@ function App() {
         {
           posts.map((eachPost, i) => (
             <div key={i}>
-              {/* {console.log(eachPost.postText)} */}
               <Posts
                 isLit={isLit}
+                setIsEdit={setIsEdit}
+                setUpdateId={setUpdateId}
+                setTitle={setTitle}
+                setPostText={setPostText}
+                postId={eachPost?.postId}
                 postTitle={eachPost?.postTitle}
                 postText={eachPost?.postText}
                 postedOn={eachPost?.postedOn?.seconds}

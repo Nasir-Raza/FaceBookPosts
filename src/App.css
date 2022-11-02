@@ -10,21 +10,28 @@ body {
 }
 
 .formContainer {
-  margin-top: 1%;
+  margin-left: 17.5%;
+  margin-bottom: 2%;
+  padding-left: 25px;
+  padding-right: 25px;
+  padding-top: 18px;
+  padding-bottom: 18px;
+  width: 60%;
   display: flex;
   justify-content: center;
-  height: 12vh;
+  border: 1px solid blue;
+  border-radius: 15px;
 }
 
 .pForm {
-  width: 50%;
+  width: 98%;
   display: flex;
-  justify-content: space-between;
   flex-direction: column;
 }
 
-
-/* New CSS */
+.formButton{
+  display: flex;
+}
 
 .head {
   display: flex;
@@ -69,7 +76,7 @@ body {
 .main {
   display: flex;
   flex-direction: column;
-  height: 78vh;
+  height: 65vh;
   overflow-y: auto;
 }
 
@@ -95,6 +102,26 @@ body {
   font-size: 1.3em;
 }
 
+.buttons {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.buttons>button {
+  width: 10%;
+  height: 25px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.buttons>button:first-child {
+  margin-right: 2%;
+}
+
+.formButton>button:first-child {
+  margin-right: 2%;
+}
+
 .post .postFooter {
   display: flex;
   flex-direction: row;
@@ -116,16 +143,14 @@ hr {
   background: darkblue;
 }
 
-.pForm>button {
-  width: 20%;
+.formButton>button {
+  margin: 0px;
+  width: 14%;
+  margin-top: 10px;
   padding-right: 10px;
   font-size: 1.3em;
-  border-radius: 10px;
-}
-
-.postBtnLit {
-  background-color: darkgray;
-  color: white;
+  border-radius: 5px;
+  cursor: pointer;
 }
 
 .postBtnDark {
@@ -133,15 +158,22 @@ hr {
   color: black;
 }
 
-#search {
-  width: 40%;
-  height: 40px;
-  font-size: 1.3em;
+#postTitle {
+  height: 30px;
+  font-size: 1.2em;
   padding-left: 10px;
-  margin-right: 5px;
   margin-bottom: 5px;
-  border-radius: 10px;
+  border-radius: 5px;
 }
+
+#postText {
+  resize: none;
+  height: 70px;
+  font-size: 1.5em;
+  padding-left: 10px;
+  border-radius: 5px;
+}
+
 
 .loading {
   color: red;
@@ -178,12 +210,21 @@ hr {
   .headText {
     width: 80%;
   }
-  
+
   .headButton {
     width: 20%;
   }
 
-  .pForm>button {
+  .formButton>button {
+    width: auto;
+  }
+
+  .formContainer {
+    margin-left: 5%;
+    width: 70%;
+  }
+
+  .buttons>button {
     width: auto;
   }
 
